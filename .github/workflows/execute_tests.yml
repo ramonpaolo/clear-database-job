@@ -3,6 +3,13 @@ name: Run Test
 on:
   pull_request:
     branches: [ "main" ]
+    paths-ignore: 
+      - LICENSE
+      - README.md
+      - .github/*.md
+      - .github/CODEOWNERS
+      - .env.example
+      - .gitignore
 
 jobs:
   build:
