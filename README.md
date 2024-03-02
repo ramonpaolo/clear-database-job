@@ -72,3 +72,8 @@ Afther cofngiure the `.env`, you can run the docker-compose, or the [script.sh](
 | FIELD_DATE           | String | Yes      | "created_at"                | *                                                        |               |
 | OPTIONAL_QUERIES     | String | No       | "{"env": "development"}"    | *                                                        | "{}"          |
 | DELETE_DOCUMENTS     | String | No       | "true"                      | "true", "false"                                          | "false"       |
+
+## Warning
+
+1. It's very recommend to build the query with indexed fields!
+2. It's very recommend be carreful when execute this project in MongoDB Serverless for costs reasons!
