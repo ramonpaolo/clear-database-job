@@ -1,0 +1,45 @@
+version: "3.8"
+
+services:
+    server:
+        build: 
+            dockerfile: ./docker/node-dev.dockerfile
+            context: .
+        container_name: server_$PROJECT_NAME
+        image: server_$PROJECT_NAME
+        ports:
+            - "3000:3000"
+        volumes:
+            - ./:/app:rw
+            - /app/node_modules
+        networks:
+            - network
+        env_file:
+            - ./.env
+        depends_on:
+            - mongo
+        deploy:
+            resources:
+                limits:
+                    cpus: '0.5'
+                    memory: '512M'
+
+    mongo:
+        image: mongo:7.0.1
+        container_name: mongo_$PROJECT_NAME
+        environment:
+            - MONGO_INITDB_ROOT_USERNAME=$MONGO_USERNAME
+            - MONGO_INITDB_ROOT_PASSWORD=$MONGO_PASSWORD
+        ports:
+            - "27017:27017"
+        networks:
+            - network
+        volumes:
+            - /tmp/mongo:/etc/mongo
+            - /tmp/data:/data/db
+        restart: always
+
+networks:
+    network:
+        driver: bridge
+        name: network_$PROJECT_NAME
