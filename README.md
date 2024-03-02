@@ -18,7 +18,7 @@ WebhookSchema = {
   },
   body: {
     type: Object,
-  }
+  },
   created_at: {
     type: Date,
     expiryAfterInSeconds: 3600, // 1 Hour
@@ -32,7 +32,7 @@ console.log(Webhook.findOne({}))
   event: 'paid',
   body: {
     ...
-  }
+  },
   created_at: '2024-03-01T16:23:19.655Z',
 }
 ```
@@ -71,3 +71,4 @@ Afther cofngiure the `.env`, you can run the docker-compose, or the [script.sh](
 | COLLECTION_NAME      | String | Yes      | "webhooks"                  | *                                                        |               |
 | FIELD_DATE           | String | Yes      | "created_at"                | *                                                        |               |
 | OPTIONAL_QUERIES     | String | No       | "{"env": "development"}"    | *                                                        | "{}"          |
+| DELETE_DOCUMENTS     | String | No       | "true"                      | "true", "false"                                          | "false"       |
