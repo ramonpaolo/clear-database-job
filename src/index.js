@@ -131,6 +131,8 @@ async function runQuery(unit, time) {
       const deletedDocuments = await collection.deleteMany(query)
       console.log("Quantity of documenFts deleted: " + deletedDocuments.deletedCount);
     }
+
+    client.close()
   } catch (err) {
     console.error(err);
   }
