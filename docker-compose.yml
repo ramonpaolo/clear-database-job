@@ -24,6 +24,25 @@ services:
                     cpus: '0.5'
                     memory: '512M'
 
+    tests:
+        container_name: tests_$PROJECT_NAME
+        image: server_$PROJECT_NAME
+        command: ["yarn", "test", "--watch"]
+        volumes:
+            - ./:/app:rw
+            - /app/node_modules
+        networks:
+            - network
+        env_file:
+            - ./.env.test
+        depends_on:
+            - mongo
+        deploy:
+            resources:
+                limits:
+                    cpus: '0.5'
+                    memory: '512M'
+
     mongo:
         image: mongo:7.0.1
         container_name: mongo_$PROJECT_NAME

@@ -97,7 +97,7 @@ export const subDate = (unit, time, timeNow) => {
  * @param {Number} time 
  * @description Used to query and delete the matched documents
  */
-async function runQuery(unit, time) {
+export async function runQuery(unit, time) {
   console.log('Initing CronJob!')
 
   const dateNow = new Date()
@@ -129,7 +129,7 @@ async function runQuery(unit, time) {
 
     if (DELETE_DOCUMENTS === 'true') {
       const deletedDocuments = await collection.deleteMany(query)
-      console.log("Quantity of documenFts deleted: " + deletedDocuments.deletedCount);
+      console.log("Quantity of documents deleted: " + deletedDocuments.deletedCount);
     }
 
     client.close()
