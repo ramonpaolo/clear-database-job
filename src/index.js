@@ -4,7 +4,7 @@ import { subDays, subHours, subMinutes, subMonths, subSeconds, subYears } from '
 
 dotenv.config()
 
-const { APP_NAME, MONGO_URL, DATABASE_NAME, COLLECTION_NAME, FIELD_DATE, OPTIONAL_QUERIES, EXECUTE_TIME_UNIT, EXECUTE_EVERY_TIME } = process.env
+const { APP_NAME, MONGO_URL, DATABASE_NAME, COLLECTION_NAME, FIELD_DATE, OPTIONAL_QUERIES, EXECUTE_TIME_UNIT, EXECUTE_EVERY_TIME, DELETE_DOCUMENTS } = process.env
 
 const field = FIELD_DATE || 'created_at'
 const optionalQueries = OPTIONAL_QUERIES ? JSON.parse(OPTIONAL_QUERIES) : {}
@@ -127,8 +127,10 @@ async function runQuery(unit, time) {
     const documents = await collection.countDocuments(query)
     console.log("Quantity of documents found: " + documents);
 
-    const deletedDocuments = await collection.deleteMany(query)
-    console.log("Quantity of documents deleted: " + deletedDocuments.deletedCount);
+    if (DELETE_DOCUMENTS === 'true') {
+      const deletedDocuments = await collection.deleteMany(query)
+      console.log("Quantity of documenFts deleted: " + deletedDocuments.deletedCount);
+    }
   } catch (err) {
     console.error(err);
   }
