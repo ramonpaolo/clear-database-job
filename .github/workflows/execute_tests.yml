@@ -34,3 +34,5 @@ jobs:
 
     - name: Run Test
       run: yarn test
+      env:
+        MONGO_URL: mongodb+srv://${{ secrets.MONGO_USERNAME }}:${{ secrets.MONGO_PASSWORD }}@${{ secrets.MONGO_HOST }}/
