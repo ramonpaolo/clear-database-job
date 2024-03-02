@@ -3,7 +3,7 @@ version: "3.8"
 services:
     server:
         build: 
-            dockerfile: ./docker/node-dev.dockerfile
+            dockerfile: ./docker/node.dockerfile
             context: .
         container_name: server_$PROJECT_NAME
         image: server_$PROJECT_NAME
