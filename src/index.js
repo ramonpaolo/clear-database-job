@@ -134,7 +134,7 @@ async function runQuery(unit, time) {
 
     client.close()
   } catch (err) {
-    console.error(err);
+    console.error("error: ", err);
   }
 }
 
