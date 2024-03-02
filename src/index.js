@@ -121,6 +121,9 @@ async function runQuery(unit, time) {
       ...optionalQueries,
     }
 
+    console.log('Query that will be used:')
+    console.log(query)
+
     const documents = await collection.countDocuments(query)
     console.log("Quantity of documents found: " + documents);
 
