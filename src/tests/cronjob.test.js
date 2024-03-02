@@ -1,11 +1,11 @@
-import assert, { strict } from "node:assert";
+import { strict } from "node:assert";
 import { describe, it } from "node:test";
 
-import { cronJob, transformUnitToMilliseconds } from "../index.js";
+import { createConfcronJob, transformUnitToMilliseconds } from "../index.js";
 
 describe('CronJob', () => {
-  it('set cronjob', () => {
-    const cronJobReceived = cronJob()
+  it('set cronjob with default values', () => {
+    const cronJobReceived = createConfcronJob()
 
     strict.strictEqual(cronJobReceived.time, 60)
     strict.strictEqual(cronJobReceived.unit, 'minutes')
