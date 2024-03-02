@@ -1,5 +1,6 @@
 import { strict } from 'node:assert';
 import { describe, it } from 'node:test';
+
 import { subDate } from '../index.js';
 
 describe('Date', () => {
