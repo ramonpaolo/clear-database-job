@@ -2,24 +2,32 @@
   "name": "clear-job",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
-    "dev": "nodemon src/index.js",
-    "test": "NODE_ENV=test node --test"
+    "dev": "node --trace-warnings --watch --trace-sigint src/index.js",
+    "test": "NODE_ENV=test node --test",
+    "start": "node src/index.js"
   },
   "type": "module",
-  "keywords": [],
+  "keywords": [
+    "mongodb",
+    "documents",
+    "job",
+    "cronjob",
+    "scheduled",
+    "automation",
+    "devops",
+    "database-cleanup",
+    "open-source"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@types/node": "^20.11.24",
     "date-fns": "^3.3.1",
-    "dotenv": "^16.4.5",
     "mongodb": "^6.4.0"
   },
-  "devDependencies": {
-    "@types/dotenv": "^8.2.0",
-    "nodemon": "^3.1.0",
-    "ts-node": "^10.9.2"
+  "engines": {
+    "node": "21.x.x"
   }
 }

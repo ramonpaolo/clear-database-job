@@ -1,8 +1,5 @@
 import { MongoClient } from 'mongodb'
-import dotenv from 'dotenv'
 import { subDays, subHours, subMinutes, subMonths, subSeconds, subYears } from 'date-fns'
-
-dotenv.config()
 
 const { APP_NAME, MONGO_URL, DATABASE_NAME, COLLECTION_NAME, FIELD_DATE, OPTIONAL_QUERIES, EXECUTE_TIME_UNIT, EXECUTE_EVERY_TIME, DELETE_DOCUMENTS } = process.env
 
@@ -129,7 +126,7 @@ async function runQuery(unit, time) {
 
     if (DELETE_DOCUMENTS === 'true') {
       const deletedDocuments = await collection.deleteMany(query)
-      console.log("Quantity of documenFts deleted: " + deletedDocuments.deletedCount);
+      console.log("Quantity of documents deleted: " + deletedDocuments.deletedCount);
     }
 
     client.close()
