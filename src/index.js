@@ -1,7 +1,7 @@
 import { MongoClient } from 'mongodb'
 import { subDays, subHours, subMinutes, subMonths, subSeconds, subYears } from 'date-fns'
 
-const { APP_NAME, MONGO_URL, DATABASE_NAME, COLLECTION_NAME, FIELD_DATE, OPTIONAL_QUERIES, EXECUTE_TIME_UNIT, EXECUTE_EVERY_TIME, DELETE_DOCUMENTS } = process.env
+const { APP_NAME, MONGO_URL, DATABASE_NAME, COLLECTION_NAME, FIELD_DATE, OPTIONAL_QUERIES, EXECUTE_WHEN_INIT, EXECUTE_TIME_UNIT, EXECUTE_EVERY_TIME, DELETE_DOCUMENTS, NODE_ENV } = process.env
 
 const field = FIELD_DATE || 'created_at'
 const optionalQueries = OPTIONAL_QUERIES ? JSON.parse(OPTIONAL_QUERIES) : {}
@@ -142,7 +142,7 @@ const durationInMillis = milliseconds * cronJobSettings.time
 
 console.log(`CronJob seted to execute every ${cronJobSettings.time} ${cronJobSettings.unit}!`)
 
-if (process.env.NODE_ENV !== "test") {
-  if (process.env.EXECUTE_WHEN_INIT === 'true') setTimeout(() => runQuery(cronJobSettings.unit, cronJobSettings.time), 0)
+if (NODE_ENV !== "test") {
+  if (EXECUTE_WHEN_INIT === 'true') setTimeout(() => runQuery(cronJobSettings.unit, cronJobSettings.time), 0)
   setInterval(() => runQuery(cronJobSettings.unit, cronJobSettings.time), durationInMillis)
 }
