@@ -1,5 +1,10 @@
 import { MongoClient } from 'mongodb'
 import { subDays, subHours, subMinutes, subMonths, subSeconds, subYears } from 'date-fns'
+import process from 'node:process'
+
+try {
+  process.loadEnvFile();
+} catch (error) { }
 
 const { APP_NAME, MONGO_URL, DATABASE_NAME, COLLECTION_NAME, FIELD_DATE, OPTIONAL_QUERIES, EXECUTE_WHEN_INIT, EXECUTE_TIME_UNIT, EXECUTE_EVERY_TIME, DELETE_DOCUMENTS, NODE_ENV } = process.env
 
