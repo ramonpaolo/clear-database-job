@@ -103,16 +103,18 @@ async function runQuery(unit, time) {
   console.log('Initing CronJob!')
 
   const dateNow = new Date()
+  const deleteBefore = subDate(unit, time, dateNow)
 
   const info = {
     deleted_documents: 0,
-    start_time: dateNow.getUTCMilliseconds(),
+    start_time: process.uptime(),
     end_time: 0,
-    query,
+    query: {
+      [field]: { $lte: deleteBefore.toISOString() },
+      ...optionalQueries,
+    },
     error: undefined,
   };
-
-  const deleteBefore = subDate(unit, time, dateNow)
 
   console.log('Date now:', dateNow.toISOString())
   console.log('Delete documents when the date is equal or less than', deleteBefore.toISOString())
@@ -126,19 +128,14 @@ async function runQuery(unit, time) {
 
     const collection = db.collection(COLLECTION_NAME);
 
-    const query = {
-      [field]: { $lte: deleteBefore.toISOString() },
-      ...optionalQueries,
-    }
-
     console.log('Query that will be used:')
-    console.log(query)
+    console.log(info.query)
 
-    const documents = await collection.countDocuments(query)
+    const documents = await collection.countDocuments(info.query)
     console.log("Quantity of documents found: ", documents);
 
     if (DELETE_DOCUMENTS === 'true') {
-      info.deleted_documents = (await collection.deleteMany(query)).deletedCount
+      info.deleted_documents = (await collection.deleteMany(info.query)).deletedCount
       console.log("Quantity of documents deleted: ", info.deleted_documents);
     }
 
