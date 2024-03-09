@@ -7,7 +7,7 @@ import { MongoClient } from "mongodb";
 
 import sendgrid from '@sendgrid/mail';
 
-import { main, selectTemplate } from "../../notification/sendgrid.js";
+import { main, selectTemplate } from "../../src/notification/sendgrid.js";
 
 const provider = "sendgrid";
 const providerTitle = "Sendgrid";

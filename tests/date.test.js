@@ -1,7 +1,7 @@
 import { strict } from 'node:assert';
 import { describe, it } from 'node:test';
 
-import { subDate } from '../index.js';
+import { subDate } from '../src/index.js';
 
 describe('Date', () => {
   describe('Sub Date', () => {
