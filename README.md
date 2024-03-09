@@ -73,6 +73,20 @@ Afther cofngiure the `.env`, you can run the docker-compose, or the [script.sh](
 | OPTIONAL_QUERIES     | String | No       | "{"env": "development"}"    | *                                                        | "{}"          |
 | DELETE_DOCUMENTS     | String | No       | "true"                      | "true", "false"                                          | "false"       |
 
+## Send notification when anything occur
+You can enable the job to send an email via sendgrid, when the job is executed with success, or with error!
+
+To enable this, you only need 2 things:
+1- Have a Sendgrid account
+2- Configure this envs:
+
+| Environment Variable  | Type   | Required | Example                     | Possible Values                                          | Default Value |
+| --------------------- | ------ | -------- | --------------------------- | -------------------------------------------------------- | ------------- |
+| NOTIFICATION_PROVIDER | String | Yes      | "sendgrid"                  | "sendgrid"                                               |               |
+| SENDGRID_API_KEY      | String | Yes      |                             | *                                                        |               |
+| TO_EMAIL              | String | Yes      |                             | *                                                        |               |
+| FROM_EMAIL            | String | Yes      |                             | *                                                        |               |
+
 ## Warning
 
 1. It's very recommend to build the query with indexed fields!
