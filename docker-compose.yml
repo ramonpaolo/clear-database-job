@@ -35,8 +35,8 @@ services:
         networks:
             - network
         volumes:
-            - /tmp/mongo:/etc/mongo
-            - /tmp/data:/data/db
+            - /tmp/mongo/$PROJECT_NAME:/etc/mongo
+            - /tmp/data/$PROJECT_NAME:/data/db
         restart: always
 
 networks:
