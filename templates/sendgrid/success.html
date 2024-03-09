@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Job finalized with success!</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+
+    .container {
+      background-color: #f2f2f2;
+      padding: 20px;
+      border-radius: 5px;
+    }
+
+    .header {
+      color: #4CAF50;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .content {
+      font-size: 16px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="header">Job finalized with success!</div>
+    <div class="content">
+      <p>Hello!</p>
+      <p>Your job <strong>{{ NAME_JOB }}</strong> was finalized with success at <strong>{{ FINALIZED_TIME }}</strong>!
+      </p>
+      <p>Quantity of deleted documents: <strong>{{ DELETED_DOCUMENTS }}</strong></p>
+      <p>Total time spend in milliseconds: <strong>{{ ELAPSED_TIME }}</strong></p>
+      <p>The query that was used:</p>
+      <code>{{ QUERY }}</code>
+    </div>
+  </div>
+</body>
+
+</html>

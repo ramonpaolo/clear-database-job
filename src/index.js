@@ -6,7 +6,7 @@ try {
   process.loadEnvFile();
 } catch (error) { }
 
-const { APP_NAME, MONGO_URL, DATABASE_NAME, COLLECTION_NAME, FIELD_DATE, OPTIONAL_QUERIES, EXECUTE_WHEN_INIT, EXECUTE_TIME_UNIT, EXECUTE_EVERY_TIME, DELETE_DOCUMENTS, NODE_ENV } = process.env
+const { APP_NAME, MONGO_URL, DATABASE_NAME, COLLECTION_NAME, FIELD_DATE, OPTIONAL_QUERIES, EXECUTE_WHEN_INIT, EXECUTE_TIME_UNIT, EXECUTE_EVERY_TIME, DELETE_DOCUMENTS, NODE_ENV, NOTIFICATION_PROVIDER } = process.env
 
 const field = FIELD_DATE || 'created_at'
 const optionalQueries = OPTIONAL_QUERIES ? JSON.parse(OPTIONAL_QUERIES) : {}
@@ -129,12 +129,27 @@ async function runQuery(unit, time) {
     const documents = await collection.countDocuments(query)
     console.log("Quantity of documents found: " + documents);
 
+    let deletedDocuments = 0;
+
     if (DELETE_DOCUMENTS === 'true') {
-      const deletedDocuments = await collection.deleteMany(query)
-      console.log("Quantity of documents deleted: " + deletedDocuments.deletedCount);
+      deletedDocuments = (await collection.deleteMany(query)).deletedCount
+      console.log("Quantity of documents deleted: " + deletedDocuments);
     }
 
-    client.close()
+    await client.close()
+
+    const info = {
+      deleted_documents: deletedDocuments,
+      start_time: dateNow.getUTCMilliseconds(),
+      end_time: process.uptime(),
+      query,
+    };
+
+    console.info(info)
+
+    if (NOTIFICATION_PROVIDER) {
+      (await import(`./notification/${NOTIFICATION_PROVIDER.toLowerCase()}.js`)).default('success', info)
+    }
   } catch (err) {
     console.error(err);
   }
