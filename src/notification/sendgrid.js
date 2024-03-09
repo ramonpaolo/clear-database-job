@@ -17,14 +17,14 @@ sendgrid.setApiKey(SENDGRID_API_KEY);
  * @description Function to select the template to mount to send the email
  * @returns {void}
  */
-const main = async (type, info) => {
+export const main = async (type, info) => {
   let html = selectTemplate(type)
 
   const tags = [
     ['NAME_JOB', APP_NAME],
     ['FINALIZED_TIME', new Date().toISOString()],
     ['DELETED_DOCUMENTS', info.deleted_documents],
-    ['ELAPSED_TIME', (info.start_time - info.end_time).toFixed(2)],
+    ['ELAPSED_TIME', (info.end_time - info.start_time).toFixed(2)],
     ['QUERY', JSON.stringify(info.query, {}, 2)],
   ];
 
@@ -35,7 +35,7 @@ const main = async (type, info) => {
   await sendEmail(html);
 }
 
-const sendEmail = async html => {
+export const sendEmail = async html => {
   await sendgrid.send({
     from: FROM_EMAIL,
     to: TO_EMAIL,
@@ -49,10 +49,8 @@ const sendEmail = async html => {
  * @description Function to select the template to send the email
  * @returns {string}
  */
-const selectTemplate = (type) => {
+export const selectTemplate = (type) => {
   const path = resolve(cwd(), 'templates', 'sendgrid', `${type}.html`)
 
   return readFileSync(path).toString()
 }
-
-export default main

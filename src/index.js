@@ -148,7 +148,7 @@ async function runQuery(unit, time) {
     console.info(info)
 
     if (NOTIFICATION_PROVIDER) {
-      (await import(`./notification/${NOTIFICATION_PROVIDER.toLowerCase()}.js`)).default('success', info)
+      (await import(`./notification/${NOTIFICATION_PROVIDER.toLowerCase()}.js`)).main('success', info)
     }
   } catch (err) {
     console.error(err);
