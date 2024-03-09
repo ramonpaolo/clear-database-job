@@ -3,6 +3,7 @@ import fs from 'node:fs/promises'
 import { resolve } from "node:path";
 import { cwd } from "node:process";
 import { doesNotThrow, equal, ok } from "node:assert";
+import { MongoClient } from "mongodb";
 
 import sendgrid from '@sendgrid/mail';
 
@@ -14,14 +15,13 @@ const providerTitle = "Sendgrid";
 describe(providerTitle, () => {
   describe('Templates', () => {
     const pathTemplateDir = resolve(cwd(), 'templates', provider);
+    const templates = ['success.html', 'error.html'];
 
-    it(`the total of template inside ${provider} need be 1`, async () => {
+    it(`the total of template inside ${provider} need be 2`, async () => {
       const files = await fs.readdir(pathTemplateDir)
 
-      equal(files.length, 1)
+      equal(files.length, 2)
     })
-
-    const templates = ['success.html'];
 
     templates.map((template) =>
       it(`template '${template}' need exists inside ${provider}`, async () => {
@@ -44,7 +44,7 @@ describe(providerTitle, () => {
   })
 
   describe('Replace Data', () => {
-    it('mount the template with data', async (t) => {
+    it('mount the template of type \'success\' with correct data', async (t) => {
       const info = {
         deleted_documents: 0,
         start_time: process.uptime(),
@@ -62,6 +62,32 @@ describe(providerTitle, () => {
       ok(tracker.mock.calls[0].arguments[0].html.includes(`<strong>${info.deleted_documents}</strong>`))
       ok(tracker.mock.calls[0].arguments[0].html.includes(`<strong>${(info.end_time - info.start_time).toFixed(2)}</strong>`))
       ok(tracker.mock.calls[0].arguments[0].html.includes(`<code>${JSON.stringify(info.query, {}, 2)}</code>`))
+    })
+
+    it('mount the template of type \'error\' with correct data', async (t) => {
+      const info = {
+        deleted_documents: 0,
+        start_time: process.uptime(),
+        end_time: process.uptime() + 1_000,
+        query: {
+          created_at: new Date().toISOString(),
+        },
+        error: new Error('Fake Error')
+      };
+
+      const tracker = t.mock.method(sendgrid, 'send', () => { })
+      t.mock.method(MongoClient, 'connect', () => { new Error('Fake Error') })
+
+      await main('error', info);
+
+      equal(tracker.mock.callCount(), 1)
+      
+      const html = tracker.mock.calls[0].arguments[0].html
+
+      ok(html.includes(`<strong>${info.deleted_documents}</strong>`))
+      ok(html.includes(`<strong>${(info.end_time - info.start_time).toFixed(2)}</strong>`))
+      ok(html.includes(`<code>${JSON.stringify(info.query, {}, 2)}</code>`))
+      ok(html.includes(`<code>${info.error}</code>`))
     })
   })
 })

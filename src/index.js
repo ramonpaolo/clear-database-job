@@ -104,6 +104,14 @@ async function runQuery(unit, time) {
 
   const dateNow = new Date()
 
+  const info = {
+    deleted_documents: 0,
+    start_time: dateNow.getUTCMilliseconds(),
+    end_time: 0,
+    query,
+    error: undefined,
+  };
+
   const deleteBefore = subDate(unit, time, dateNow)
 
   console.log('Date now:', dateNow.toISOString())
@@ -127,23 +135,16 @@ async function runQuery(unit, time) {
     console.log(query)
 
     const documents = await collection.countDocuments(query)
-    console.log("Quantity of documents found: " + documents);
-
-    let deletedDocuments = 0;
+    console.log("Quantity of documents found: ", documents);
 
     if (DELETE_DOCUMENTS === 'true') {
-      deletedDocuments = (await collection.deleteMany(query)).deletedCount
-      console.log("Quantity of documents deleted: " + deletedDocuments);
+      info.deleted_documents = (await collection.deleteMany(query)).deletedCount
+      console.log("Quantity of documents deleted: ", info.deleted_documents);
     }
 
     await client.close()
 
-    const info = {
-      deleted_documents: deletedDocuments,
-      start_time: dateNow.getUTCMilliseconds(),
-      end_time: process.uptime(),
-      query,
-    };
+    info.end_time = process.uptime();
 
     console.info(info)
 
@@ -152,6 +153,13 @@ async function runQuery(unit, time) {
     }
   } catch (err) {
     console.error(err);
+
+    info.end_time = info.end_time ? info.end_time : process.uptime();
+    info.error = err;
+
+    if (NOTIFICATION_PROVIDER) {
+      (await import(`./notification/${NOTIFICATION_PROVIDER.toLowerCase()}.js`)).main('error', info)
+    }
   }
 }
 
