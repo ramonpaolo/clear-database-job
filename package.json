@@ -7,7 +7,8 @@
     "start:dev": "node --trace-warnings --watch --trace-sigint src/index.js",
     "test:dev": "NODE_ENV=test node --watch --test tests/**/*.test.js",
     "test:prod": "NODE_ENV=test node --test --test tests/**/*.test.js",
-    "start:prod": "node src/index.js"
+    "start:prod": "node src/index.js",
+    "lint": "eslint ./ --fix"
   },
   "type": "module",
   "keywords": [
@@ -27,7 +28,8 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^20.11.24"
+    "@types/node": "^20.11.24",
+    "eslint": "^8.57.0"
   },
   "dependencies": {
     "@sendgrid/mail": "^8.1.1",
