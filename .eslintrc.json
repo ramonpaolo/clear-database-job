@@ -9,13 +9,24 @@
         "sourceType": "module"
     },
     "rules": {
-        "semi": [
+        "no-undef": "error",
+        "no-unused-vars": "error",
+        "eqeqeq": "error",
+        "curly": "error",
+        "no-eval": "error",
+        "indent": [
             "error",
-            "always"
+            2
         ],
         "quotes": [
             "error",
             "single"
-        ]
+        ],
+        "semi": [
+            "error",
+            "always"
+        ],
+        "no-var": "error",
+        "prefer-const": "error"
     }
 }
