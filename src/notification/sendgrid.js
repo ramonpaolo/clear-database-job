@@ -8,7 +8,13 @@ const { SENDGRID_API_KEY, APP_NAME, FROM_EMAIL, TO_EMAIL, } = process.env;
 sendgrid.setApiKey(SENDGRID_API_KEY);
 
 /**
- * @typedef {{deleted_documents: number, start_time: number, end_time: number, query: object, error: Error | undefined}} Info
+ * @typedef { {
+ *  deleted_documents: number,
+ *  start_time: number,
+ *  end_time: number,
+ *  query: object,
+ *  error: Error | undefined,
+ * } } Info
  */
 
 /**
