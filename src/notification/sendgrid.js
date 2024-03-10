@@ -8,6 +8,26 @@ const { SENDGRID_API_KEY, APP_NAME, FROM_EMAIL, TO_EMAIL, } = process.env;
 sendgrid.setApiKey(SENDGRID_API_KEY);
 
 /**
+ * @param {'error'|'success'|'info'} type
+ * @description Function to select the template to send the email
+ * @returns {string}
+ */
+export const selectTemplate = (type) => {
+  const path = resolve(cwd(), 'templates', 'sendgrid', `${type}.html`);
+
+  return readFileSync(path).toString();
+};
+
+export const sendEmail = async html => {
+  await sendgrid.send({
+    from: FROM_EMAIL,
+    to: TO_EMAIL,
+    subject: 'Job',
+    html,
+  }, false);
+};
+
+/**
  * @typedef { {
  *  deleted_documents: number,
  *  start_time: number,
@@ -29,8 +49,10 @@ export const main = async (type, info) => {
   const tags = [
     ['NAME_JOB', APP_NAME],
     ['FINALIZED_TIME', new Date().toISOString()],
+    // eslint-disable-next-line no-magic-numbers
     ['ELAPSED_TIME', (info.end_time - info.start_time).toFixed(2)],
     ['DELETED_DOCUMENTS', info.deleted_documents],
+    // eslint-disable-next-line no-magic-numbers
     ['QUERY', JSON.stringify(info.query, {}, 2)],
   ];
 
@@ -43,24 +65,4 @@ export const main = async (type, info) => {
   });
 
   await sendEmail(html);
-};
-
-export const sendEmail = async html => {
-  await sendgrid.send({
-    from: FROM_EMAIL,
-    to: TO_EMAIL,
-    subject: 'Job',
-    html,
-  }, false);
-};
-
-/**
- * @param {'error'|'success'|'info'} type
- * @description Function to select the template to send the email
- * @returns {string}
- */
-export const selectTemplate = (type) => {
-  const path = resolve(cwd(), 'templates', 'sendgrid', `${type}.html`);
-
-  return readFileSync(path).toString();
 };

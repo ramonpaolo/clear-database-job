@@ -1,3 +1,6 @@
+/* eslint-disable no-magic-numbers */
+// TODO(ramon): fix the eslint in future
+
 import { describe, it } from 'node:test';
 import fs from 'node:fs/promises';
 import { resolve } from 'node:path';

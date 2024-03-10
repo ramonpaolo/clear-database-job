@@ -1,3 +1,6 @@
+/* eslint-disable no-magic-numbers */
+// TODO(ramon): fix the eslint in future
+
 import { strict } from 'node:assert';
 import { describe, it } from 'node:test';
 

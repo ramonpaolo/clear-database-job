@@ -37,6 +37,7 @@ const optionalQueries = OPTIONAL_QUERIES ? JSON.parse(OPTIONAL_QUERIES) : {};
  * @param {Unit} unit - Unit of time(e.g. seconds, minutes...)
  * @default unit = 'minutes'
  */
+// eslint-disable-next-line no-magic-numbers
 export const createConfcronJob = (time = 60, unit = 'minutes') => {
   return {
     unit,
@@ -52,10 +53,15 @@ export const createConfcronJob = (time = 60, unit = 'minutes') => {
  */
 export const transformUnitToMilliseconds = (unit) => {
   const second = 1_000;
+  // eslint-disable-next-line no-magic-numbers
   const minute = second * 60;
+  // eslint-disable-next-line no-magic-numbers
   const hour = minute * 60;
+  // eslint-disable-next-line no-magic-numbers
   const day = hour * 24;
+  // eslint-disable-next-line no-magic-numbers
   const month = day * 30;
+  // eslint-disable-next-line no-magic-numbers
   const year = month * 12;
 
   switch (unit) {
