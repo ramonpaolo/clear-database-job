@@ -18,7 +18,7 @@ sendgrid.setApiKey(SENDGRID_API_KEY);
  * @returns {void}
  */
 export const main = async (type, info) => {
-  let html = selectTemplate(type)
+  let html = selectTemplate(type);
 
   const tags = [
     ['NAME_JOB', APP_NAME],
@@ -29,15 +29,15 @@ export const main = async (type, info) => {
   ];
 
   if (type === 'error') {
-    tags.push(['STACK_ERROR', info.error])
+    tags.push(['STACK_ERROR', info.error]);
   }
 
   tags.map(([tag, value]) => {
-    html = html.replace(`{{ ${tag} }}`, `${value}`)
-  })
+    html = html.replace(`{{ ${tag} }}`, `${value}`);
+  });
 
   await sendEmail(html);
-}
+};
 
 export const sendEmail = async html => {
   await sendgrid.send({
@@ -45,8 +45,8 @@ export const sendEmail = async html => {
     to: TO_EMAIL,
     subject: 'Job',
     html,
-  }, false)
-}
+  }, false);
+};
 
 /**
  * @param {'error'|'success'|'info'} type
@@ -54,7 +54,7 @@ export const sendEmail = async html => {
  * @returns {string}
  */
 export const selectTemplate = (type) => {
-  const path = resolve(cwd(), 'templates', 'sendgrid', `${type}.html`)
+  const path = resolve(cwd(), 'templates', 'sendgrid', `${type}.html`);
 
-  return readFileSync(path).toString()
-}
+  return readFileSync(path).toString();
+};
