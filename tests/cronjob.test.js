@@ -1,7 +1,7 @@
 import { strict } from "node:assert";
 import { describe, it } from "node:test";
 
-import { createConfcronJob, transformUnitToMilliseconds } from "../index.js";
+import { createConfcronJob, transformUnitToMilliseconds } from "../src/index.js";
 
 describe('CronJob', () => {
   it('set cronjob with default values', () => {

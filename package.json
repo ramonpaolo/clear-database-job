@@ -4,9 +4,10 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
-    "dev": "node --trace-warnings --watch --trace-sigint src/index.js",
-    "test": "NODE_ENV=test node --test",
-    "start": "node src/index.js"
+    "start:dev": "node --trace-warnings --watch --trace-sigint src/index.js",
+    "test:dev": "NODE_ENV=test node --watch --test tests/**/*.test.js",
+    "test:prod": "NODE_ENV=test node --test --test tests/**/*.test.js",
+    "start:prod": "node src/index.js"
   },
   "type": "module",
   "keywords": [
@@ -29,6 +30,7 @@
     "@types/node": "^20.11.24"
   },
   "dependencies": {
+    "@sendgrid/mail": "^8.1.1",
     "date-fns": "^3.3.1",
     "mongodb": "^6.4.0"
   },

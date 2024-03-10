@@ -1,7 +1,12 @@
 import { MongoClient } from 'mongodb'
 import { subDays, subHours, subMinutes, subMonths, subSeconds, subYears } from 'date-fns'
+import process from 'node:process'
 
-const { APP_NAME, MONGO_URL, DATABASE_NAME, COLLECTION_NAME, FIELD_DATE, OPTIONAL_QUERIES, EXECUTE_WHEN_INIT, EXECUTE_TIME_UNIT, EXECUTE_EVERY_TIME, DELETE_DOCUMENTS, NODE_ENV } = process.env
+try {
+  process.loadEnvFile();
+} catch (error) { }
+
+const { APP_NAME, MONGO_URL, DATABASE_NAME, COLLECTION_NAME, FIELD_DATE, OPTIONAL_QUERIES, EXECUTE_WHEN_INIT, EXECUTE_TIME_UNIT, EXECUTE_EVERY_TIME, DELETE_DOCUMENTS, NODE_ENV, NOTIFICATION_PROVIDER } = process.env
 
 const field = FIELD_DATE || 'created_at'
 const optionalQueries = OPTIONAL_QUERIES ? JSON.parse(OPTIONAL_QUERIES) : {}
@@ -98,8 +103,18 @@ async function runQuery(unit, time) {
   console.log('Initing CronJob!')
 
   const dateNow = new Date()
-
   const deleteBefore = subDate(unit, time, dateNow)
+
+  const info = {
+    deleted_documents: 0,
+    start_time: process.uptime(),
+    end_time: 0,
+    query: {
+      [field]: { $lte: deleteBefore.toISOString() },
+      ...optionalQueries,
+    },
+    error: undefined,
+  };
 
   console.log('Date now:', dateNow.toISOString())
   console.log('Delete documents when the date is equal or less than', deleteBefore.toISOString())
@@ -113,25 +128,35 @@ async function runQuery(unit, time) {
 
     const collection = db.collection(COLLECTION_NAME);
 
-    const query = {
-      [field]: { $lte: deleteBefore.toISOString() },
-      ...optionalQueries,
-    }
-
     console.log('Query that will be used:')
-    console.log(query)
+    console.log(info.query)
 
-    const documents = await collection.countDocuments(query)
-    console.log("Quantity of documents found: " + documents);
+    const documents = await collection.countDocuments(info.query)
+    console.log("Quantity of documents found: ", documents);
 
     if (DELETE_DOCUMENTS === 'true') {
-      const deletedDocuments = await collection.deleteMany(query)
-      console.log("Quantity of documents deleted: " + deletedDocuments.deletedCount);
+      info.deleted_documents = (await collection.deleteMany(info.query)).deletedCount
+      console.log("Quantity of documents deleted: ", info.deleted_documents);
     }
 
-    client.close()
+    await client.close()
+
+    info.end_time = process.uptime();
+
+    console.info(info)
+
+    if (NOTIFICATION_PROVIDER) {
+      (await import(`./notification/${NOTIFICATION_PROVIDER.toLowerCase()}.js`)).main('success', info)
+    }
   } catch (err) {
     console.error(err);
+
+    info.end_time = info.end_time ? info.end_time : process.uptime();
+    info.error = err;
+
+    if (NOTIFICATION_PROVIDER) {
+      (await import(`./notification/${NOTIFICATION_PROVIDER.toLowerCase()}.js`)).main('error', info)
+    }
   }
 }
 
