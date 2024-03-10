@@ -1,12 +1,32 @@
 import { MongoClient } from 'mongodb';
-import { subDays, subHours, subMinutes, subMonths, subSeconds, subYears } from 'date-fns';
+import {
+  subDays,
+  subHours,
+  subMinutes,
+  subMonths,
+  subSeconds,
+  subYears,
+} from 'date-fns';
 import process from 'node:process';
 
 try {
   process.loadEnvFile();
 } catch (error) { /* empty */ }
 
-const { APP_NAME, MONGO_URL, DATABASE_NAME, COLLECTION_NAME, FIELD_DATE, OPTIONAL_QUERIES, EXECUTE_WHEN_INIT, EXECUTE_TIME_UNIT, EXECUTE_EVERY_TIME, DELETE_DOCUMENTS, NODE_ENV, NOTIFICATION_PROVIDER } = process.env;
+const {
+  APP_NAME,
+  MONGO_URL,
+  DATABASE_NAME,
+  COLLECTION_NAME,
+  FIELD_DATE,
+  OPTIONAL_QUERIES,
+  EXECUTE_WHEN_INIT,
+  EXECUTE_TIME_UNIT,
+  EXECUTE_EVERY_TIME,
+  DELETE_DOCUMENTS,
+  NODE_ENV,
+  NOTIFICATION_PROVIDER,
+} = process.env;
 
 const field = FIELD_DATE || 'created_at';
 const optionalQueries = OPTIONAL_QUERIES ? JSON.parse(OPTIONAL_QUERIES) : {};
@@ -17,6 +37,7 @@ const optionalQueries = OPTIONAL_QUERIES ? JSON.parse(OPTIONAL_QUERIES) : {};
  * @param {Unit} unit - Unit of time(e.g. seconds, minutes...)
  * @default unit = 'minutes'
  */
+// eslint-disable-next-line no-magic-numbers
 export const createConfcronJob = (time = 60, unit = 'minutes') => {
   return {
     unit,
@@ -26,15 +47,21 @@ export const createConfcronJob = (time = 60, unit = 'minutes') => {
 
 /**
  * @param {Unit} unit 
- * @description Used to transform the time received in milliseconds to set the cronjob 
+ * @description Used to transform the time received in 
+ * milliseconds to set the cronjob 
  * @private
  */
 export const transformUnitToMilliseconds = (unit) => {
   const second = 1_000;
+  // eslint-disable-next-line no-magic-numbers
   const minute = second * 60;
+  // eslint-disable-next-line no-magic-numbers
   const hour = minute * 60;
+  // eslint-disable-next-line no-magic-numbers
   const day = hour * 24;
+  // eslint-disable-next-line no-magic-numbers
   const month = day * 30;
+  // eslint-disable-next-line no-magic-numbers
   const year = month * 12;
 
   switch (unit) {
@@ -56,7 +83,9 @@ export const transformUnitToMilliseconds = (unit) => {
 };
 
 /**
- * @typedef {("seconds" | "minutes" | "hours" | "days" | "months" | "years" | undefined)} Unit
+ * @typedef {
+ * "seconds" | "minutes" | "hours" | "days" | "months" | "years" | undefined
+ * } Unit
  */
 
 /**
@@ -117,10 +146,14 @@ async function runQuery(unit, time) {
   };
 
   console.log('Date now:', dateNow.toISOString());
-  console.log('Delete documents when the date is equal or less than', deleteBefore.toISOString());
+  console.log(
+    'Delete documents when the date is equal or less than: ',
+    deleteBefore.toISOString()
+  );
 
   try {
-    const client = await MongoClient.connect(String(MONGO_URL), { appName: APP_NAME, });
+    const client =
+      await MongoClient.connect(String(MONGO_URL), { appName: APP_NAME, });
 
     console.log('Connected to MongoDB with success!');
 
@@ -135,7 +168,8 @@ async function runQuery(unit, time) {
     console.log('Quantity of documents found: ', documents);
 
     if (DELETE_DOCUMENTS === 'true') {
-      info.deleted_documents = (await collection.deleteMany(info.query)).deletedCount;
+      info.deleted_documents =
+        (await collection.deleteMany(info.query)).deletedCount;
       console.log('Quantity of documents deleted: ', info.deleted_documents);
     }
 
@@ -146,7 +180,8 @@ async function runQuery(unit, time) {
     console.info(info);
 
     if (NOTIFICATION_PROVIDER) {
-      (await import(`./notification/${NOTIFICATION_PROVIDER.toLowerCase()}.js`)).main('success', info);
+      (await import(`./notification/${NOTIFICATION_PROVIDER.toLowerCase()}.js`))
+        .main('success', info);
     }
   } catch (err) {
     console.error(err);
@@ -155,19 +190,29 @@ async function runQuery(unit, time) {
     info.error = err;
 
     if (NOTIFICATION_PROVIDER) {
-      (await import(`./notification/${NOTIFICATION_PROVIDER.toLowerCase()}.js`)).main('error', info);
+      (await import(`./notification/${NOTIFICATION_PROVIDER.toLowerCase()}.js`))
+        .main('error', info);
     }
   }
 }
 
-const cronJobSettings = createConfcronJob(EXECUTE_EVERY_TIME, EXECUTE_TIME_UNIT);
+const cronJobSettings =
+  createConfcronJob(EXECUTE_EVERY_TIME, EXECUTE_TIME_UNIT);
 
 const milliseconds = transformUnitToMilliseconds(cronJobSettings.unit);
 const durationInMillis = milliseconds * cronJobSettings.time;
 
-console.log(`CronJob seted to execute every ${cronJobSettings.time} ${cronJobSettings.unit}!`);
+console.log(
+  // eslint-disable-next-line max-len
+  `CronJob seted to execute every ${cronJobSettings.time} ${cronJobSettings.unit}!`
+);
 
 if (NODE_ENV !== 'test') {
-  if (EXECUTE_WHEN_INIT === 'true') {setTimeout(() => runQuery(cronJobSettings.unit, cronJobSettings.time), 0);}
-  setInterval(() => runQuery(cronJobSettings.unit, cronJobSettings.time), durationInMillis);
+  if (EXECUTE_WHEN_INIT === 'true') {
+    setTimeout(() => runQuery(cronJobSettings.unit, cronJobSettings.time), 0);
+  }
+  setInterval(() =>
+    runQuery(cronJobSettings.unit, cronJobSettings.time),
+  durationInMillis
+  );
 }

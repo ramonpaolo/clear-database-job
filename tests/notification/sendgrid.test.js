@@ -1,3 +1,6 @@
+/* eslint-disable no-magic-numbers */
+// TODO(ramon): fix the eslint in future
+
 import { describe, it } from 'node:test';
 import fs from 'node:fs/promises';
 import { resolve } from 'node:path';
@@ -25,7 +28,8 @@ describe(providerTitle, () => {
 
     templates.map((template) =>
       it(`template '${template}' need exists inside ${provider}`, async () => {
-        doesNotThrow(async () => await fs.statfs(resolve(pathTemplateDir, template)), {
+        doesNotThrow(async () =>
+          await fs.statfs(resolve(pathTemplateDir, template)), {
           name: 'ENOTDIR',
           message: 'no such file or directory'
         });
@@ -34,7 +38,8 @@ describe(providerTitle, () => {
 
     templates.map((template) =>
       it(`read the template '${template}' with success`, async () => {
-        const expectedFile = (await fs.readFile(resolve(pathTemplateDir, template))).toString();
+        const expectedFile =
+          (await fs.readFile(resolve(pathTemplateDir, template))).toString();
         const receivedFile = selectTemplate(template.split('.')[0]);
 
         equal(receivedFile.length, expectedFile.length);
@@ -44,6 +49,7 @@ describe(providerTitle, () => {
   });
 
   describe('Replace Data', () => {
+    // eslint-disable-next-line max-len
     it('mount the template of type \'success\' with correct data', async (t) => {
       const info = {
         deleted_documents: 0,
@@ -59,9 +65,14 @@ describe(providerTitle, () => {
       await main('success', info);
 
       equal(tracker.mock.callCount(), 1);
-      ok(tracker.mock.calls[0].arguments[0].html.includes(`<strong>${info.deleted_documents}</strong>`));
-      ok(tracker.mock.calls[0].arguments[0].html.includes(`<strong>${(info.end_time - info.start_time).toFixed(2)}</strong>`));
-      ok(tracker.mock.calls[0].arguments[0].html.includes(`<code>${JSON.stringify(info.query, {}, 2)}</code>`));
+
+      const html = tracker.mock.calls[0].arguments[0].html;
+
+      ok(html.includes(`<strong>${info.deleted_documents}</strong>`));
+      ok(html.includes(
+        `<strong>${(info.end_time - info.start_time).toFixed(2)}</strong>`
+      ));
+      ok(html.includes(`<code>${JSON.stringify(info.query, {}, 2)}</code>`));
     });
 
     it('mount the template of type \'error\' with correct data', async (t) => {
@@ -81,11 +92,13 @@ describe(providerTitle, () => {
       await main('error', info);
 
       equal(tracker.mock.callCount(), 1);
-      
+
       const html = tracker.mock.calls[0].arguments[0].html;
 
       ok(html.includes(`<strong>${info.deleted_documents}</strong>`));
-      ok(html.includes(`<strong>${(info.end_time - info.start_time).toFixed(2)}</strong>`));
+      ok(html.includes(
+        `<strong>${(info.end_time - info.start_time).toFixed(2)}</strong>`
+      ));
       ok(html.includes(`<code>${JSON.stringify(info.query, {}, 2)}</code>`));
       ok(html.includes(`<code>${info.error}</code>`));
     });

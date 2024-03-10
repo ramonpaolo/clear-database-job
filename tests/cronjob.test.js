@@ -1,7 +1,13 @@
+/* eslint-disable no-magic-numbers */
+// TODO(ramon): fix the eslint in future
+
 import { strict } from 'node:assert';
 import { describe, it } from 'node:test';
 
-import { createConfcronJob, transformUnitToMilliseconds } from '../src/index.js';
+import {
+  createConfcronJob,
+  transformUnitToMilliseconds,
+} from '../src/index.js';
 
 describe('CronJob', () => {
   it('set cronjob with default values', () => {
