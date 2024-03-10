@@ -38,20 +38,20 @@ export const transformUnitToMilliseconds = (unit) => {
   const year = month * 12;
 
   switch (unit) {
-    case 'seconds':
-      return second;
-    case 'minutes':
-      return minute;
-    case 'hours':
-      return hour;
-    case 'days':
-      return day;
-    case 'months':
-      return month;
-    case 'years':
-      return year;
-    default:
-      throw Error(`Invalid time unit '${unit}'!`);
+  case 'seconds':
+    return second;
+  case 'minutes':
+    return minute;
+  case 'hours':
+    return hour;
+  case 'days':
+    return day;
+  case 'months':
+    return month;
+  case 'years':
+    return year;
+  default:
+    throw Error(`Invalid time unit '${unit}'!`);
   }
 };
 
@@ -65,20 +65,20 @@ export const transformUnitToMilliseconds = (unit) => {
  */
 export const chooseWhatSub = (unit) => {
   switch (unit) {
-    case 'seconds':
-      return subSeconds;
-    case 'minutes':
-      return subMinutes;
-    case 'hours':
-      return subHours;
-    case 'days':
-      return subDays;
-    case 'months':
-      return subMonths;
-    case 'years':
-      return subYears;
-    default:
-      throw Error(`Invalid time unit '${unit}'!`);
+  case 'seconds':
+    return subSeconds;
+  case 'minutes':
+    return subMinutes;
+  case 'hours':
+    return subHours;
+  case 'days':
+    return subDays;
+  case 'months':
+    return subMonths;
+  case 'years':
+    return subYears;
+  default:
+    throw Error(`Invalid time unit '${unit}'!`);
   }
 };
 
@@ -168,6 +168,6 @@ const durationInMillis = milliseconds * cronJobSettings.time;
 console.log(`CronJob seted to execute every ${cronJobSettings.time} ${cronJobSettings.unit}!`);
 
 if (NODE_ENV !== 'test') {
-  if (EXECUTE_WHEN_INIT === 'true') setTimeout(() => runQuery(cronJobSettings.unit, cronJobSettings.time), 0);
+  if (EXECUTE_WHEN_INIT === 'true') {setTimeout(() => runQuery(cronJobSettings.unit, cronJobSettings.time), 0);}
   setInterval(() => runQuery(cronJobSettings.unit, cronJobSettings.time), durationInMillis);
 }
