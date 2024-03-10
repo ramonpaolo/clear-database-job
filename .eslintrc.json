@@ -27,6 +27,7 @@
             "always"
         ],
         "no-var": "error",
-        "prefer-const": "error"
+        "prefer-const": "error",
+        "max-len": ["error", { "code": 80 }]
     }
 }
